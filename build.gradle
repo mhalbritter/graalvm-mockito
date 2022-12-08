@@ -1,0 +1,38 @@
+plugins {
+    id 'application'
+    id 'org.graalvm.buildtools.native' version '0.9.19'
+}
+
+application {
+    mainClass = 'graalvm.mockito.Main'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.mockito:mockito-core:4.9.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+    testImplementation 'org.assertj:assertj-core:3.23.1'
+}
+
+graalvmNative {
+    binaries {
+        main {
+            requiredVersion = '22.3'
+        }
+    }
+    agent {
+        defaultMode = "standard"
+        metadataCopy {
+            mergeWithExisting = true
+            inputTaskNames.addAll("test")
+            outputDirectories.add("src/test/resources/META-INF/native-image/")
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
